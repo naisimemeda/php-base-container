@@ -146,11 +146,11 @@ class  Container
          * @var $parameter ReflectionParameter
          * **/
         foreach ($parameters as $parameter) {
-//            var_dump($parameters[1]->getClass()->getName());die;
             if ($parameter->getClass() != null) {
                 if (!class_exists($parameter->getClass()->getName(), true)) {
                     throw new RuntimeException($parameter->getClass()->getName() . " not exist");
                 } else {
+                    var_dump($parameters[1]->getClass()->getName());die;
                     $parsed_args[] = $this->make($parameter->getClass()->getName());
                 }
             } else {
