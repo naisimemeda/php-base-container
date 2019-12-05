@@ -49,6 +49,7 @@ class  Container
         }
 
         $this->binds[$name] = ['concrete' => $value, 'shared' => $shared];
+
     }
 
 
@@ -69,11 +70,13 @@ class  Container
         if (isset($this->instance[$name])) {
             return $this->instance[$name];
         }
-
         try {
+
             if (isset($this->binds[$name])) {
+
                 $concrete = $this->binds[$name]['concrete'];
                 if (is_callable($concrete)) {
+//                    var_dump($concrete);var_dump($real_args);die;
                     $instance = $this->parseCallable($concrete, $real_args);
                 } else {
                     $instance = $this->parseClass($concrete, $real_args);
@@ -98,6 +101,7 @@ class  Container
      */
     private function parseCallable(callable $callback, $real_args)
     {
+
         $refl_function = new ReflectionFunction($callback);
         $parameters = $refl_function->getParameters();
         $parsed_args = [];
@@ -116,6 +120,7 @@ class  Container
     private function parseClass($class_name, $real_args = [])
     {
         $refl_class = new ReflectionClass($class_name);
+//        var_dump($real_args);die;
         if (!$refl_class->isInstantiable()) {
             throw  new RuntimeException("{$class_name} can not be initialized");
         }
@@ -141,6 +146,7 @@ class  Container
          * @var $parameter ReflectionParameter
          * **/
         foreach ($parameters as $parameter) {
+//            var_dump($parameters[1]->getClass()->getName());die;
             if ($parameter->getClass() != null) {
                 if (!class_exists($parameter->getClass()->getName(), true)) {
                     throw new RuntimeException($parameter->getClass()->getName() . " not exist");
